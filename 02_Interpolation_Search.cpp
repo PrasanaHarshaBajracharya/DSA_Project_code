@@ -1,70 +1,61 @@
-# include <iostream>
+#include <iostream>
+#include <vector>
 using namespace std;
 
-int interpolationSearch(int arr[], int low , int high , int key ){
-
+// Interpolation search function
+int interpolationSearch(const vector<int>& arr, int low, int high, int key) {
     // Check if key is outside array range
-    if (key < arr[low] || key > arr[high]){
-        return -1 ;  
+    if (key < arr[low] || key > arr[high]) {
+        return -1;
     }
 
-    // Linear search if array is very small
-    if (high - low <=1)
-    {
+    // Calculate interpolation position
+    int pos = low + ((key - arr[low]) * (high - low)) / (arr[high] - arr[low]);
+
+    // Handle division by zero (if arr[high] == arr[low])
+    if (arr[high] == arr[low]) {
         if (arr[low] == key) {
             return low;
-        } else if (arr[high] == key){
-            return high;
         } else {
             return -1;
         }
     }
 
-    // calculate interpolation position 
-    int pos = low + (((key - arr[low])* (high - low )) / 
-                         (arr[high] - arr[low]));
-
-    // if key is found 
-    if (arr[pos] == key){
+    // If key is found
+    if (arr[pos] == key) {
         return pos;
     }
 
-    // if key is less, search in lelf half
-    if (arr[pos] > key){
-        return interpolationSearch(arr , low , pos - 1 , key);
+    // If key is less, search in the left half
+    if (arr[pos] > key) {
+        return interpolationSearch(arr, low, pos - 1, key);
+    } else {
+        // If key is greater, search in the right half
+        return interpolationSearch(arr, pos + 1, high, key);
     }
-    else {
-        // if key is greater, search in right half
-        return interpolationSearch(arr , low , pos + 1 , key);
-    }
-
 }
 
-int main(){
-
+int main() {
     int key;
-    cout << "Enter the key " ;
+    
+    cout << "Enter the key: ";
     cin >> key;
 
+    // Create a sorted vector from 1 to 1000
+    vector<int> arr1;
+    for (int i = 1; i <= 1000; ++i) {
+        arr1.push_back(i);
+    }
 
-    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-        21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-        31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-        41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-        51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-        61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
-        71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
-        81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
-        91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
-    
+    // Perform interpolation search
+    int index = interpolationSearch(arr1, 0, arr1.size() - 1, key);
 
-    int n = sizeof(arr)/ sizeof(arr[0]);
+    // Output the result
+    if (index != -1) {
+        cout << "The key " << key << " is at index " << index << endl;
+    } else {
+        cout << "The key " << key << " is not found in the array." << endl;
+    }
 
-    
-    int index = interpolationSearch( arr , 0 , n - 1 , key);
-
-    cout << "The " << key << " is in index "  << index ;
-   return 0;
-
+    return 0;
 }
