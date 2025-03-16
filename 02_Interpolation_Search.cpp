@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 
 // Interpolation search function
 int interpolationSearch(const vector<int>& arr, int low, int high, int key) {
@@ -36,25 +38,33 @@ int interpolationSearch(const vector<int>& arr, int low, int high, int key) {
 }
 
 int main() {
-    int key;
-    
-    cout << "Enter the key: ";
-    cin >> key;
+    // Varying input sizes
+    vector<int> inputSizes = {1000, 10000, 100000, 1000000, 10000000};
 
-    // Create a sorted vector from 1 to 1000
-    vector<int> arr1;
-    for (int i = 1; i <= 1000; ++i) {
-        arr1.push_back(i);
-    }
+    for (int size : inputSizes) {
+        // Create a sorted vector from 1 to size
+        vector<int> arr;
+        for (int i = 1; i <= size; ++i) {
+            arr.push_back(i);
+        }
 
-    // Perform interpolation search
-    int index = interpolationSearch(arr1, 0, arr1.size() - 1, key);
+        // Target element (can be any element within the range)
+        int key = size / 2;
 
-    // Output the result
-    if (index != -1) {
-        cout << "The key " << key << " is at index " << index << endl;
-    } else {
-        cout << "The key " << key << " is not found in the array." << endl;
+        // Start measuring time
+        auto start = high_resolution_clock::now();
+
+        // Perform interpolation search
+        int index = interpolationSearch(arr, 0, arr.size() - 1, key);
+
+        // Stop measuring time
+        auto stop = high_resolution_clock::now();
+
+        // Calculate the duration
+        auto duration = duration_cast<microseconds>(stop - start);
+
+        // Output the result
+        cout << "Input size: " << size << ", Time taken: " << duration.count() << " microseconds" << endl;
     }
 
     return 0;
